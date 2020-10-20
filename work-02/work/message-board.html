@@ -24,6 +24,7 @@
         #board li {
             text-align: left;
             margin: 10px 5px;
+            min-height: 51px;
             /*padding: 5px;*/
             border: dashed 1px darksalmon;
         }
@@ -33,8 +34,14 @@
             height: 80px;
             width: 800px;
         }
-        p{
-            word-wrap:break-word;
+
+        p {
+            word-wrap: break-word;
+        }
+
+        .remove_message {
+            float: right;
+            margin: 16px;
         }
     </style>
 </head>
@@ -42,7 +49,7 @@
 
 <div id="main">
     <span>Number of messages：{{ messages.length }}</span>
-    <input type="button" value="clear" @click="clear_messages">
+    <input v-if="messages.length" type="button" value="clear" @click="clear_messages">
     <p>Have your say on our message board by clicking here.</p>
 
     <input v-if="!create_message" type="button" @click="leave_message" value="Leaving a message.">
@@ -57,8 +64,12 @@
         <p v-if="messages.length == 0"> Nothing in here</p>
         <ul>
             <li v-for="(message,index) in messages" :key="index">
+
+                <input class="remove_message" type="button" @click="remove_message(index)" value="Remove">
                 <p>{{ message }}</p>
+
             </li>
+
         </ul>
     </div>
 
@@ -73,7 +84,7 @@
         el: "#main",
         data: {
             message: "",
-            messages: ["This is a message.","Hello Vue!"],
+            messages: ["This is a message.", "Hello Vue!"],
             create_message: false,
         },
         methods: {
@@ -85,11 +96,17 @@
                 // start from here
                 this.create_message = false;
                 this.messages.unshift(this.message);
+                this.message = "";
             },
             clear_messages() {
                 // start from here
-                this.messages = []
+                this.messages = [];
+            },
+            remove_message(index){
+                this.messages.splice(index, 1);;
+
             }
+
         }
     })
 </script>
