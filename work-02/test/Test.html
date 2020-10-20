@@ -9,7 +9,18 @@
 
 <div id="app">
 
-    {{ message }}
+    <h1>{{ message }}</h1>
+    <p>{{ number }}</p>
+    <p v-text="user1"></p>
+    <p v-text="user1.username"></p>
+    <p v-html="html"></p>
+    <span v-for="(i) in arr">
+        {{ i }}
+    </span>
+    <br>
+    <p v-for="(v,index) in users">
+        {{ index }}{{ v }}
+    </p>
 
 </div>
 
@@ -21,6 +32,12 @@
         el: "#app",
         data: {
             message: "Hello Vue!!",
+            number: 18,
+            user1: {'username': 'Tom', 'password': '123456'},
+            user2: {'username': 'Bob', 'password': '654321'},
+            html: "<a href='#'>try click here</a>",
+            arr: [1, 2, 3, 15],
+            users: [{'username': 'Tom', 'password': '123456'}, {'username': 'Tom', 'password': '123456'}],
         },
         methods: {
             func() {
