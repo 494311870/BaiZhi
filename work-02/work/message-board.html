@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Message Board</title>
+    <script src="js/vue.min.js"></script>
+    <style>
+        #main {
+            /*width: 800px;*/
+            margin: auto;
+            text-align: center;
+        }
+
+        #board {
+            margin: 5px auto;
+            width: 800px;
+            border: solid 1px rebeccapurple;
+        }
+
+        #board ul {
+            padding: 0 0 0 20px;
+        }
+
+        #board li {
+            text-align: left;
+            margin: 10px 5px;
+            /*padding: 5px;*/
+            border: dashed 1px darksalmon;
+        }
+
+        #create_message {
+            margin: 5px;
+            height: 80px;
+            width: 800px;
+        }
+        p{
+            word-wrap:break-word;
+        }
+    </style>
+</head>
+<body>
+
+<div id="main">
+    <span>Number of messages：{{ messages.length }}</span>
+    <input type="button" value="clear" @click="clear_messages">
+    <p>Have your say on our message board by clicking here.</p>
+
+    <input v-if="!create_message" type="button" @click="leave_message" value="Leaving a message.">
+    <input v-else type="button" @click="submit_message" value="Submit">
+
+    <div>
+        <textarea name="new_message" id="create_message" v-if="create_message" v-model="message"></textarea>
+    </div>
+
+
+    <div id="board">
+        <p v-if="messages.length == 0"> Nothing in here</p>
+        <ul>
+            <li v-for="(message,index) in messages" :key="index">
+                <p>{{ message }}</p>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#main",
+        data: {
+            message: "",
+            messages: ["This is a message.","Hello Vue!"],
+            create_message: false,
+        },
+        methods: {
+            leave_message() {
+                // start from here
+                this.create_message = true;
+            },
+            submit_message() {
+                // start from here
+                this.create_message = false;
+                this.messages.unshift(this.message);
+            },
+            clear_messages() {
+                // start from here
+                this.messages = []
+            }
+        }
+    })
+</script>
