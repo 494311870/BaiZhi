@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <h3 v-show="true">{{ message }}</h3>
+    <div>
+        <span v-show="flag">{{ message }}</span>
+        <input type="button" @click="change_flag" value="click here">
+    </div>
+    <div>
+        <h3 v-if="flag" id="a1">flag is true</h3>
+        <h3 v-else-if="other">something in here</h3>
+        <h3 v-else id="a2">flag is false</h3>
+    </div>
+    <div>
+        <img :src="src">
+        <input type="button" @click="change_src" value="click here">
+
+    </div>
+    <div>
+        <input type="text" v-model="message">
+        <p>{{ message }}</p>
+    </div>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+            flag: true,
+            other: true,
+            src: "img/111.png"
+        },
+        methods: {
+            change_flag() {
+                // start from here
+                this.flag = !this.flag;
+            },
+            change_src() {
+                // start from here
+                this.src = "img/222.png"
+            }
+        }
+    })
+</script>
