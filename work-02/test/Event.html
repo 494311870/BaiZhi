@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    {{ message.toUpperCase() }}
+    <div>
+        {{ num }}
+        <input type="button" @click="change" value="click here">
+    </div>
+    <div>
+        {{ name }}
+        <input type="button" @click="change_name('Bob')" value="click here">
+    </div>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+            num: 10,
+            name:"Tom",
+        },
+        methods: {
+            change() {
+                // start from here
+                this.num++;
+            },
+            change_name(name){
+                this.name = name
+            }
+        }
+    })
+</script>
