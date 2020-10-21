@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+
+
+<div id="app">
+    <first :msg="message">
+        {{ message }}
+    </first>
+
+    <second></second>
+
+    <input type="button" value="what will happen?" @click="func">
+</div>
+<br>
+<br>
+<br>
+<br>
+<div id="otherapp">
+    <first>
+        {{ message }}
+    </first>
+    <second @btn="func"></second>
+</div>
+</body>
+</html>
+
+<script>
+    let first = {
+        // html页面
+        template: `
+            <div>This is my first component</div>
+        `,
+    }
+
+
+    Vue.component('first', first);
+
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+        },
+        methods: {
+            func() {
+                // start from here
+                alert(this.message);
+            }
+        },
+        components: {
+            //
+            first: {
+                template: `
+            <div>
+                <h1>This is local component</h1>
+                <p>{{ username }}</p>
+                <input type="button" @click="func"value="click me">
+                <br>A text box ：
+                <input type="text" :value="msg">
+            </div>
+
+            `
+                ,
+                data: function () {
+                    return {
+                        username: "Tom",
+                    }
+                },
+                methods: {
+                    func() {
+                        alert(this.username)
+                    }
+                },
+                props: ["msg", "name"],
+            },
+        }
+    });
+
+    new Vue({
+        el: "#otherapp",
+        data: {
+            message: "Hello Vue!!",
+        },
+        methods: {
+            func(x) {
+                // start from here
+                alert(x);
+            }
+        },
+        components: {
+            // 局部组件覆盖掉了全局组件
+            second: {
+                template: `
+            <div>
+                <h1>The other local component</h1>
+                <input type="button" value="click me" @click="func">
+
+            </div>
+
+            `,
+                methods: {
+                    func() {
+                        this.$emit("btn", "something")
+                    }
+
+                },
+            },
+        }
+    });
+</script>
