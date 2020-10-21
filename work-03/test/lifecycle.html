@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <h1 id="first">{{ message }}</h1>
+<!--    <input id="second" type="text" v-model="nums" @click="change">-->
+    <input type="button" @click="change" value="button" >
+        <input id="second" type="text" :value="nums" >
+
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+            nums: 10,
+        },
+        methods: {
+            change() {
+                // start from here
+                this.nums++;
+            }
+        },
+        beforeCreate: function () {
+            console.log("beforeCreate: " + this.message);
+        },
+        created: function () {
+            console.log("create: " + this.message)
+        },
+        beforeMount() {
+            this.console.log("beforeMount" + document.getElementById("first").innerText);
+        },
+
+        mounted() {
+            console.log("mounted: " + document.getElementById("first").innerText);
+        },
+
+        beforeUpdate() {
+            console.log("beforeUpdate: " + this.nums)
+            console.log("beforeUpdate: " + document.getElementById("second").value)
+        },
+
+        updated() {
+            console.log("updated: " + this.nums)
+            console.log("updated: " + document.getElementById("second").value)
+        },
+    })
+</script>
