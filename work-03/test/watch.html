@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <div>
+        <input type="text" v-model="s">
+
+        <p>s1:{{ s1 }}</p>
+        <br>
+        <p>s2:{{ s2 }}</p>
+    </div>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+            s: "",
+            s1: "",
+            s2: "",
+        },
+        methods: {
+            func() {
+                // start from here
+            }
+        },
+        watch: {
+            // 代表监听的是data中的num变量
+            s() {
+                this.s1 += this.s;
+                this.s2 = this.s;
+            },
+        },
+    })
+</script>
