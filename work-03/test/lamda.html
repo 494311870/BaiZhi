@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <input type="number" v-model="num1">
+    <input type="number" v-model="num2">
+    <input type="button" @click="func" value="click me">
+
+    <div>
+        <br>
+        <input type="button" @click="wait(1000)" value="click me">
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+            num1: 10,
+            num2: 20,
+
+        },
+        methods: {
+            func() {
+                // start from here
+                alert(this.add(this.num1, this.num2));
+            },
+            add: (x, y) => x + y,
+            // wait: (time) => setTimeout(() => {
+            //     alert(this.message);
+            // },time),
+            wait(time) {
+                setTimeout(() => {
+                    alert(this.message);
+                }, time)
+            },
+
+
+        }
+    })
+</script>
