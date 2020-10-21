@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <div>
+        <input type="text" v-model="s1">
+        <input type="text" v-model="s2">
+    </div>
+    <p>{{ result }}</p>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+            s1: "",
+            s2: "",
+        },
+        methods: {
+            func() {
+                // start from here
+            }
+        },
+        computed: {
+            result() {
+                console.log(this.s1);
+                return this.s1 + this.s2;
+            },
+        },
+    })
+</script>
