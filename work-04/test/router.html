@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+    <script src="js/vue-router.3.0.1.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <h1>{{ message }}</h1>
+
+    <router-link to="/first">Visit First</router-link>
+    <router-link to="/second">Visit Second</router-link>
+    <router-view></router-view>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+        },
+        methods: {
+            func() {
+                // start from here
+            }
+        },
+        router: new VueRouter({
+            routes: [
+                {
+                    path: "/first", component: {
+                        template: `
+                        <div>
+                            <h1>First Component</h1>
+                        </div>
+                    `
+                    }
+                },
+                {
+                    path: "/second", component: {
+                        template:
+                            `<div>
+                                <h1>First Second</h1>
+                            </div>`
+                    }
+                },
+            ]
+
+        }),
+    })
+</script>
