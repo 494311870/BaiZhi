@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+    <script src="js/vue-router.3.0.1.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <h1>{{ message }}</h1>
+    <router-view></router-view>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+        },
+        methods: {
+            func() {
+                // start from here
+            }
+        },
+        router: new VueRouter({
+            routes: [
+                // {
+                //     path: "/", redirect: '/first'
+                // },
+
+                {
+                    path: "/first/", component: {
+                        template: `
+                        <div>
+                            <h1>First Component</h1>
+                            <router-link to="/second?age=18&name=Tom">Click me</router-link>
+                            <br>
+
+                            <p v-if="$route.query.day">Query|Day:{{ $route.query.day }} </p>
+
+                        </div>
+                    `
+                    }
+                },
+                {
+                    path: "/second", component: {
+                        template:
+                            `<div>
+                                <h1>Second</h1>
+                                <p>Query|Name:{{ $route.query.name }} Age:{{ $route.query.age }}</p>
+                                <router-link to="/third/10">Click me</router-link>
+
+                            </div>`,
+                    }
+                },
+                {
+                    path: "/third/:id", component: {
+                        template:
+                            `<div>
+                                <h1>Third</h1>
+                                <p>Params|ID:{{ $route.params.id }}</p>
+                                <input type="button" @click="goto1" value="what happen?">
+                                <input type="button" @click="goto2" value="what happen?">
+                                <br>
+                                <input type="button" @click="goBack" value="goBack">
+
+                            </div>`,
+                        methods: {
+                            goto1() {
+                                this.$router.push("/first?day=22")
+
+
+                            },
+                            goto2() {
+                                this.$router.push("/third/50")
+
+                            },
+                            goBack() {
+                                this.$router.go(-1);
+
+                            },
+                        }
+                    }
+                },
+                {
+                    path: "/*", redirect: '/first'
+                },
+            ]
+
+        }),
+    })
+</script>
