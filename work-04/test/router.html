@@ -33,6 +33,10 @@
         },
         router: new VueRouter({
             routes: [
+                // {
+                //     path: "/", redirect: '/first'
+                // },
+
                 {
                     path: "/first", component: {
                         template: `
@@ -46,9 +50,35 @@
                     path: "/second", component: {
                         template:
                             `<div>
-                                <h1>First Second</h1>
-                            </div>`
+                                <h1>Second</h1>
+                                    <table border="2">
+                                    <tr>
+                                    <td>ID</td>
+                                    <td>Name</td>
+                                    <td>Birthday</td>
+                                    <td>do?</td>
+                                    </tr>
+                                    <tr v-for="user in users" :key="user.id">
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.birthday }}</td>
+                                        <td>delete | update</td>
+                                    </tr>
+                                    </table>
+                            </div>`,
+                        data() {
+                            return {
+                                users: [
+                                    {"id": 1, username: "Tom", birthday: "2011-11-11"},
+                                    {"id": 2, username: "Bob", birthday: "2012-12-12"},
+                                    {"id": 3, username: "Jerry", birthday: "2010-10-10"},
+                                ]
+                            }
+                        },
                     }
+                },
+                {
+                    path: "/*", redirect: '/first'
                 },
             ]
 
