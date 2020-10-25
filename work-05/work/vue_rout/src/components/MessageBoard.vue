@@ -1,0 +1,121 @@
+<template>
+    <div id="main">
+
+        <span>Number of messages：{{ messages.length }}</span>
+        <input v-if="messages.length" type="button" value="clear" @click="clear_messages">
+        <p>Have your say on our message board by clicking here.</p>
+
+        <input v-if="!create_message" type="button" @click="leave_message" value="Leaving a message.">
+        <input v-else type="button" @click="submit_message" value="Submit">
+
+        <div>
+            <textarea name="new_message" id="create_message" v-if="create_message" v-model="message"></textarea>
+        </div>
+
+
+        <div id="board">
+            <p v-if="messages.length == 0"> Nothing in here</p>
+            <ul>
+                <li v-for="(message,index) in messages" :key="index">
+
+                    <input class="remove_message" type="button" @click="remove_message(index)" value="Remove">
+                    <p>{{ message }}</p>
+
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "MessageBoard",
+        data() {
+            return {
+                message: "",
+                messages: ["This is a message.", "Hello Vue!"],
+                create_message: false,
+            }
+        },
+        methods: {
+            init() {
+                console.log("Init......");
+                if (localStorage.messages) {
+                    this.messages = JSON.parse(localStorage.messages);
+                } else {
+                    localStorage.messages = JSON.stringify(this.messages);
+                }
+            },
+            leave_message() {
+                // start from here
+                this.create_message = true;
+            },
+            submit_message() {
+                // start from here
+                this.create_message = false;
+                this.messages.unshift(this.message);
+                this.message = "";
+            },
+            clear_messages() {
+                // start from here
+                this.messages = [];
+            },
+            remove_message(index) {
+                this.messages.splice(index, 1);
+            },
+            save_data() {
+                console.log("Save......");
+                localStorage.messages = JSON.stringify(this.messages);
+            }
+        },
+        created: function () {
+            this.init();
+        },
+        updated() {
+            this.save_data();
+        }
+
+    }
+</script>
+
+<style scoped>
+    #main {
+        /*width: 800px;*/
+        margin: auto;
+        text-align: center;
+    }
+
+    #board {
+        margin: 5px auto;
+        width: 800px;
+        border: solid 1px rebeccapurple;
+    }
+
+    #board ul {
+        padding: 0 0 0 20px;
+    }
+
+    #board li {
+        text-align: left;
+        margin: 10px 5px;
+        min-height: 51px;
+        /*padding: 5px;*/
+        border: dashed 1px darksalmon;
+    }
+
+    #create_message {
+        margin: 5px;
+        height: 80px;
+        width: 800px;
+    }
+
+    p {
+        word-wrap: break-word;
+    }
+
+    .remove_message {
+        float: right;
+        margin: 16px;
+    }
+</style>
