@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    // localStorage.name = "Tom";
+    // localStorage.removeItem("name");
+
+    // localStorage.age = 18;
+    // localStorage['birthday'] = "2012-12-12";
+    // localStorage.setItem("password", "123456");
+
+    // for (let n = 0; n < localStorage.length; n++) {
+    //     console.log("index:" + n + ",key:" + localStorage.key(n) + ",value:" + localStorage.getItem(localStorage.key(n)))
+    // }
+    //
+    // localStorage.clear()
+
+    let local = localStorage;
+    local.number = 25;
+    local.name = "Bob";
+
+    local.student = {
+        id: 1,
+        username: "Andy",
+        age: 18,
+    }
+
+    let student = {
+        id: 1,
+        username: "Andy",
+        age: 18,
+    }
+
+    local.stu = JSON.stringify(student);
+
+    let stu = JSON.parse(local.stu);
+    console.log(stu);
+
+</script>
+</body>
+</html>
+
