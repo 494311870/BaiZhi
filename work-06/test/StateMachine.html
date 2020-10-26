@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+    <script src="js/vuex.3.0.1.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <h1> {{ $store.state.data }}</h1>
+    <h1> {{ $store.getters.change_num }}</h1>
+    <hr>
+    <first></first>
+    <second @btn="func"></second>
+
+
+</div>
+
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!!",
+        },
+        methods: {
+            func() {
+                // start from here
+                alert(this.message);
+            }
+        },
+        components: {
+            first: {
+                template: `
+                    <div>
+                        <h1>This is local component</h1>
+                        <p>{{ username }}</p>
+                        <p>data: {{ $store.state.data }}</p>
+                        <button @click="func">Click me</button>
+                        <input type="button" value="click me" @click="add">
+                        <input type="button" value="click me" @click="decrease">
+                    </div>
+
+                `
+                ,
+                data: function () {
+                    return {
+                        username: "Tom",
+                    }
+                },
+                methods: {
+                    func() {
+                        this.$store.commit("show", this.username);
+                    },
+                    // 在函数中向状态机提交一个变化  动作
+                    add() {
+                        this.$store.commit("num_add");
+                    },
+                    decrease() {
+                        this.$store.commit("num_decrease");
+                    },
+                },
+            },
+            second: {
+                template: `
+                    <div>
+                        <h1>The other local component</h1>
+                        <input type="button" value="click me" @click="func">
+                        <input type="button" value="click me" @click="add">
+                        <input type="button" value="click me" @click="decrease">
+
+                        <p> data: {{ $store.state.data }}</p>
+
+                    </div>
+
+                `,
+                methods: {
+                    func() {
+                        this.$emit("btn", "something");
+                    },
+                    add() {
+                        this.$store.commit("num_add");
+                    },
+                    decrease() {
+                        this.$store.commit("num_decrease");
+                    },
+
+                },
+            },
+
+        },
+        store: new Vuex.Store({
+            // 状态:  被共享的数据
+            state: {
+                // 需要共享的数据
+                data: 2012,
+            },
+            // 状态机的动作, 所有组件提交的动作都可以在此被接受
+            mutations: {
+                // 接收组件提交的动作
+                show: function (state, name) {
+                    alert(name);
+                },
+                num_add: function (state) {
+                    state.data < 2020 ? state.data++ : void (0);
+                },
+                num_decrease: function (state) {
+                    state.data > 2000 ? state.data-- : void (0);
+                },
+            },
+            getters: {
+                change_num(state) {
+                    return state.data.toString().split("").reverse().join("");
+                },
+
+            }
+        })
+
+    })
+</script>
