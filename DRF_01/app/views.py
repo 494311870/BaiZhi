@@ -6,8 +6,8 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from rest_framework.response import Response
 from rest_framework.views import APIView
 #
-from app.models import User
-
+from app.models import User, Teacher
+from app.serializers import TeacherSerializer, TeacherDeSerializer
 
 @method_decorator(csrf_exempt, name="dispatch")  # 为类视图免除csrf认证
 class UserView(View):
@@ -95,3 +95,56 @@ class StudentAPIView(APIView):
     def post(self, request, *args, **kwargs):
         print("POST GET VIEW")
         return Response("DRF POST OK")
+
+
+class TeacherAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        print("DRF GET VIEW")
+        id = kwargs.get("id")
+        if id:
+            teacher = Teacher.objects.filter(id=id).first()
+            if teacher:
+                teacher = TeacherSerializer(teacher).data
+                return Response({
+                    "status": 200,
+                    "message": "查询单个教师成功",
+                    "results": teacher
+                })
+        else:
+            teachers = TeacherSerializer(Teacher.objects.all(),many=True).data
+            return Response({
+                "status": 200,
+                "message": "查询所有教师成功",
+                "results": teachers
+            })
+
+        return JsonResponse({
+            "status": 400,
+            "message": "查询教师失败",
+        })
+
+    def post(self, request, *args, **kwargs):
+        print("POST GET VIEW")
+        request_data = request.data
+        if not isinstance(request_data, dict) or request_data == {}:
+            return Response({
+                "status": 400,
+                "message": "参数有误",
+            })
+        teacher = TeacherDeSerializer(data=request_data)
+        if teacher.is_valid():
+            res = teacher.save()
+            print(res)
+            return Response({
+                "status": 200,
+                "message": "教师添加成功",
+                "results": TeacherSerializer(res).data
+            })
+
+        else:
+            return Response({
+                "status": 400,
+                "message": "教师添加失败",
+                "results": teacher.errors
+            })
