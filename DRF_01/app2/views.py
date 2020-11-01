@@ -1,6 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
+from rest_framework import mixins, viewsets
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -149,7 +151,47 @@ class BookAPIView(APIView):
         })
 
 
-"""
-查询单个  查询多个  新增单个
-新增多个 删除单个  删除多个  修改单个整体  修改多个整体  局部修改单个与多个
-"""
+class BookGenericAPIView(GenericAPIView,
+                         mixins.ListModelMixin,
+                         mixins.RetrieveModelMixin,
+                         mixins.DestroyModelMixin,
+                         mixins.CreateModelMixin,
+                         mixins.UpdateModelMixin):
+    queryset = Book.objects.filter()
+    serializer_class = BookModelSerializer
+    lookup_field = "id"
+
+    def get(self, request, *args, **kwargs):
+        if "id" in kwargs:
+            return self.retrieve(request, *args, **kwargs)
+        else:
+            return self.list(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class BookViewSetView(viewsets.GenericViewSet, mixins.ListModelMixin):
+    queryset = Book.objects.all()
+    serializer_class = BookModelSerializer
+    lookup_field = "id"
+
+    def user_login(self, request, *args, **kwargs):
+        # 模拟登陆
+        print("登录成功")
+        return Response("登录成功")
+
+    def get_user(self, request, *args, **kwargs):
+        # 模拟查询
+        print("查询成功1")
+        return Response("查询成功1")
+
