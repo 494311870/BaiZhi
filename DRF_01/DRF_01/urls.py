@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("app.urls")),
     path('api2/', include("app2.urls")),
+    path('api3/', include("app3.urls")),
 
     # media
     re_path('^media/(?P<path>.*)$', serve, {'document_root':  MEDIA_ROOT}),
