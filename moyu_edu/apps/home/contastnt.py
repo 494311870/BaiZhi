@@ -1,0 +1,2 @@
+# 轮播图
+BANNER_LENGTH = 3
