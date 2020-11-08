@@ -4,17 +4,22 @@
         <div class="login">
             <div class="login-title">
                 <img src="../../static/image/logo.png" alt="">
-                <p>百知教育给你最优质的学习体验!</p>
+                <p>摸鱼教育给你最优质的学习体验!</p>
             </div>
             <div class="login_box">
                 <div class="title">
-                    <span>密码登录</span>
-                    <span>短信登录</span>
+                    <span v-if="login_type==1" class="checked" @click="change_login_type(1)">密码登录</span>
+                    <span v-else @click="change_login_type(1)">密码登录</span>
+
+
+                    <span v-if="login_type==2" class="checked" @click="change_login_type(2)">短信登录</span>
+                    <span v-else @click="change_login_type(2)">短信登录</span>
+
                 </div>
-                <div class="inp">
+                <div class="inp" v-show="login_type==1">
                     <input type="text" placeholder="用户名 / 手机号码 / 邮箱" class="user" v-model="username">
                     <input type="password" name="" class="pwd" placeholder="密码" v-model="password">
-                    <div id="geetest_captcha" ref="captcha"></div>
+
                     <div class="rember">
                         <p>
                             <input type="checkbox" class="no" v-model="remember_me"/>
@@ -22,38 +27,64 @@
                         </p>
                         <p>忘记密码</p>
                     </div>
+
+                </div>
+                <div class="inp" v-show="login_type==2">
+                    <input type="text" placeholder="手机号码" class="user" v-model="phone">
+                    <div class="sms-box">
+                        <input v-model="code" type="text" maxlength="6" placeholder="输入验证码" class="user">
+                        <div v-if="smsbtn" class="sms-btn" @click="get_code">
+                            获取验证码
+                        </div>
+                        <div v-else class="sms-btn uninteractive">
+                            {{ wait }}秒后重新发送
+                        </div>
+                    </div>
+                    <!--                    <div class="sms-btn" @click="get_code">获取验证码</div>-->
+                    <!--                    <button id="get_code" class="btn btn-primary">获取验证码</button>-->
+                    <!--                    <button class="login_btn">登录</button>-->
+                </div>
+
+                <div class="inp">
+                    <div id="geetest_captcha" ref="captcha"></div>
                     <button class="login_btn btn btn-primary" @click="get_captcha">登录</button>
-                    <p class="go_login">没有账号
-                        <router-link to="/user/register/">立即注册</router-link>
+                    <p class="go_login">没有账号怎么摸鱼？
+                        <router-link to="/register/">立即注册</router-link>
                     </p>
                 </div>
-                <div class="inp" v-show="">
-                    <input type="text" placeholder="手机号码" class="user">
-                    <input type="text" class="pwd" placeholder="短信验证码">
-                    <button id="get_code" class="btn btn-primary">获取验证码</button>
-                    <button class="login_btn">登录</button>
-                    <span class="go_login">没有账号
-                    <router-link to="/user/register/">立即注册</router-link>
-                </span>
-                </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import SMSCode from "./common/SMSCode";
+
     export default {
         name: "Login",
+        components: {
+            SMSCode: SMSCode,
+        },
         data() {
             return {
+                login_type: 1,
+                phone: "",
                 username: "",
                 password: "",
                 remember_me: false,
                 token: undefined,
+                code: "",
+                smsbtn: true,
+                wait: 60,
 
             }
         },
         methods: {
+            // 切换登陆方式
+            change_login_type(type) {
+                this.login_type = type;
+            },
             // TODO:加入前端校验后，前端数据合格再出现滑块验证码
 
             // 获取验证码的方法
@@ -84,7 +115,7 @@
             },
 
             // 请求验证码的回调函数  完成验证码的验证
-             handlerPopup(captchaObj) {
+            handlerPopup(captchaObj) {
                 // 回调函数中  this的指向会被改变
                 let self = this;
                 // 在验证码被用户成功滑动后开始执行
@@ -100,16 +131,22 @@
                         },
                     }).then(res => {
                         console.log(res);
-
                         // r如果滑块验证码验证合格则完成登录
-                        self.user_login();
+                        switch (self.login_type) {
+                            case 1:
+                                self.user_login();
+                                break;
+                            case 2:
+                                self.phone_login()
+                                break;
+                        }
                     }).catch(error => {
                         console.log(error);
                     });
                 });
 
                 // // 将验证码加到id为captcha的元素里
-                 this.$refs.captcha.innerHTML="";
+                this.$refs.captcha.innerHTML = "";
                 captchaObj.appendTo("#geetest_captcha");
             },
 
@@ -132,7 +169,7 @@
                         localStorage.token = res.data.token;
                         localStorage.user = res.data.user;
                         localStorage.user_id = res.data.user_id;
-                    }else{
+                    } else {
                         localStorage.removeItem('token');
                         localStorage.removeItem('user');
                         localStorage.removeItem('user_id');
@@ -153,11 +190,47 @@
 
                 }).catch(error => {
                     console.log(error);
-                     this.$message({
-                            message: "用户名或密码错误",
-                            type: "error",
+                    this.$message({
+                        message: "用户名或密码错误",
+                        type: "error",
+                        duration: 1000,
+                    })
+                })
+            },
+            // 短信登陆
+            phone_login() {
+                // TODO:判断输入框的值是否合法
+                this.$axios({
+                    url: this.$settings.HOST + "user/login/",
+                    method: "post",
+                    data: {
+                        username: this.phone,
+                        password: `phone:${this.code}`,
+
+                    }
+                }).then(res => {
+                    console.log(res);
+
+                    if (res.data) {
+                        // 将token信息保存
+                        sessionStorage.token = res.data.token;
+
+                        this.$message({
+                            message: "恭喜你，登陆成功",
+                            type: "success",
                             duration: 1000,
                         })
+                    }
+                    // 登陆成功后返回到首页
+                    this.$router.push("/")
+
+                }).catch(error => {
+                    console.log(error);
+                    this.$message({
+                        message: "用户名或密码错误",
+                        type: "error",
+                        duration: 1000,
+                    })
                 })
             },
 
@@ -165,6 +238,37 @@
             auto_login() {
                 this.token = localStorage.token;
                 //TODO:后端自定义token校验
+            },
+
+            //
+            // 根据手机号获取验证码
+            get_code() {
+                this.$axios({
+                    url: this.$settings.HOST + "user/send/",
+                    method: "get",
+                    params: {
+                        phone: this.phone
+                    }
+                }).then(res => {
+                    console.log(res);
+                    this.smsbtn = false;
+                    this.wait = res.data.wait;
+                    this.wait_send();
+
+                }).catch(error => {
+                    console.log(error);
+                })
+            },
+            // 等待重新发送短信
+            wait_send() {
+                setTimeout(() => {
+                    if (--this.wait <= 0) {
+                        this.smsbtn = true;
+
+                    } else {
+                        this.wait_send();
+                    }
+                }, 1000)
             }
         },
         created() {
@@ -239,7 +343,7 @@
         cursor: pointer;
     }
 
-    .login_box .title span:nth-of-type(1) {
+    .login_box .title span.checked {
         color: #4a4a4a;
         border-bottom: 2px solid #84cc39;
     }
@@ -339,4 +443,24 @@
         color: #84cc39;
         cursor: pointer;
     }
+
+    .sms-box {
+        position: relative;
+    }
+
+    .sms-btn {
+        font-size: 14px;
+        color: #ffc210;
+        letter-spacing: .26px;
+        position: absolute;
+        right: 16px;
+        top: 10px;
+        cursor: pointer;
+        overflow: hidden;
+        background: #fff;
+        border-left: 1px solid #484848;
+        padding-left: 16px;
+        padding-bottom: 4px;
+    }
+
 </style>

@@ -2,6 +2,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 
 from user.models import UserInfo
+from utils.send_msg import Message
 
 
 def jwt_response_payload_handler(token, user=None, request=None):
@@ -31,7 +32,13 @@ class UserAuthBackend(ModelBackend):
         """
         user = get_user_by_account(username)
 
-        if user and user.check_password(password) and user.is_authenticated:
-            return user
-        else:
-            return None
+        if user:
+            if password[:6] == "phone:":
+                # 短信验证
+                if (Message.validate_code(username, password[6:])) and user.is_authenticated:
+                    return user
+
+            if user.check_password(password) and user.is_authenticated:
+                return user
+
+        return None

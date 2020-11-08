@@ -20,7 +20,7 @@
                         <span><router-link to="/cart">购物车</router-link></span>
                     </div>
                     <div class="login-box full-left">
-                        <router-link to="/login">个人中心</router-link>
+                        <span><router-link to="/login">个人中心</router-link></span>
                         &nbsp;|&nbsp;
                         <span>退出登陆</span>
                     </div>
@@ -32,9 +32,9 @@
                         <span><router-link to="/cart">购物车</router-link></span>
                     </div>
                     <div class="login-box full-left">
-                        <router-link to="/login">登录</router-link>
+                        <span><router-link to="/login">登录</router-link></span>
                         &nbsp;|&nbsp;
-                        <span>注册</span>
+                        <span><router-link to="/register">注册</router-link></span>
                     </div>
                 </div>
             </div>

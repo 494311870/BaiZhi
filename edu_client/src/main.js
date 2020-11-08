@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import store from "./store"
 // 导入element-ui 以及样式
 import ElementUI from 'element-ui'
 import "element-ui/lib/theme-chalk/index.css"
@@ -31,5 +31,15 @@ new Vue({
     el: '#app',
     router,
     components: {App},
-    template: '<App/>'
+    template: '<App/>',
+    store,
 })
+
+/* 路由发生变化修改页面title */
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next()
+})
+
